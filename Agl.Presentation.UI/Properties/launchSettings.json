@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Agl.Presentation.UI": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

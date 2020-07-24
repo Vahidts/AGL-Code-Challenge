@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Interfaces\" />
-    <Folder Include="Common\Models\" />
-    <Folder Include="Validators\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AGL.Domain\AGL.Domain.csproj" />
+    <ProjectReference Include="..\AGL.Infrastructure\AGL.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
