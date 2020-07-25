@@ -4,11 +4,13 @@ namespace AGL.Application.ViewModel
 {
     public class GroupedPetVm
     {
+        //View model for represnting the grouped pets.
+
         public GroupedPetVm()
         {
-            PetName = new HashSet<string>();
+            PetNames = new HashSet<string>();
         }
         public string Gender { get; set; }
-        public ICollection<string> PetName { get; set; }
+        public ICollection<string> PetNames { get; set; }
     }
 }

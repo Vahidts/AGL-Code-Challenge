@@ -2,6 +2,7 @@
 
 namespace AGL.Domain.Model
 {
+    //Core class for Person
     public class Person
     {
         public Person()

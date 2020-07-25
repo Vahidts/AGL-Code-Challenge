@@ -7,11 +7,11 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.0.1" />
+    <PackageReference Include="log4net" Version="2.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AGL.Domain\AGL.Domain.csproj" />
-    <ProjectReference Include="..\AGL.Infrastructure\AGL.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

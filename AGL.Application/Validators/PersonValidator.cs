@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using AGL.Application.Common.Models;
-using AGL.Domain.Model;
+
+using AGL.Application.Dto;
+
 using FluentValidation;
 
 namespace AGL.Application.Validators
@@ -19,17 +20,15 @@ namespace AGL.Application.Validators
         public PersonValidator()
         {
             RuleFor(p => p.Name).NotNull().WithMessage("Name Can not be null").MaximumLength(20).WithMessage("Person Name could not be longer than 20 characters.")
-                .Matches("[a-zA-Z]").WithMessage("Name can not have non-Alphabet character.");
+                .Matches(@"^[a-zA-Z]+$").WithMessage("Name can not have non-Alphabet character.");
 
-            RuleFor(p => p.Gender).NotNull().MaximumLength(10).WithMessage("Person's Gender can not be more than 10 character");
-
-            RuleFor(p => p.Age).NotNull().WithMessage("Age Can not be null.");
+            RuleFor(p => p.Gender).NotNull().WithMessage("Person's Gender can not be null")
+                .NotEqual(string.Empty).WithMessage("Person's Gender can not be empty")
+                .MaximumLength(10).WithMessage("Person's Gender can not be more than 10 character");
 
             RuleForEach(p => p.Pets).SetValidator(new PetValidator());
 
         }
     }
-
-
 }
 

@@ -1,44 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using AGL.Application.Common.Models;
-using AGL.Infrastructure.Interfaces;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+
+using AGL.Application.Dto;
+using AGL.Application.Interfaces;
+
 
 namespace AGL.Infrastructure.Repositories
 {
+    //Implementation of Repository when data comes from web service 
     public class PersonRepository : IPersonRepository
     {
-        private IConfiguration _config;
+        private readonly IContext context;
 
-        public PersonRepository(IConfiguration config)
+        public PersonRepository(IContext Context)
         {
-            _config = config;
-
+            context = Context;
         }
+
         public async Task<IQueryable<PersonDto>> GetPersons()
         {
-            try
-            {
-                var baseUrl = _config.GetSection("WebSettings").GetSection("WebServiceBaseUrl").Value;
-                var objectName = _config.GetSection("WebSettings").GetSection("JsonObject").Value;
-
-                using (var httpClient = new HttpClient())
-                {
-                    using (var response = await httpClient.GetAsync($"{baseUrl}/{objectName}"))
-                    {
-                        var jsonString = await response.Content.ReadAsStringAsync();
-                        return string.IsNullOrEmpty(jsonString) ? null : JsonConvert.DeserializeObject<List<PersonDto>>(jsonString)?.AsQueryable();
-                    }
-                }
-            }
-            catch (System.Exception)
-            {
-
-                throw;
-            }
+            return await context.GetPersonsFromWebService();
         }
     }
 }
