@@ -17,9 +17,9 @@ namespace Agl.Presentation.UI.Presentation
             _psersonServices = psersonServices;
         }
 
-        //Formatt and Show the result in UI.
+        //Format and Show the result in UI in desired format
 
-        public async Task ShowAsync(string petType)
+        public async Task ShowAndFormatAsync(string petType)
         {
             Console.WriteLine("Getting result. Please wait...");
 

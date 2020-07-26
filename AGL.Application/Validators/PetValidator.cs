@@ -1,5 +1,4 @@
 ﻿using AGL.Domain.Model;
-
 using FluentValidation;
 
 namespace AGL.Application.Validators

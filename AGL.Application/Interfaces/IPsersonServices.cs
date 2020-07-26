@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using AGL.Application.Dto;
 using AGL.Application.ViewModel;
 

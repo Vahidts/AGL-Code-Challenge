@@ -20,12 +20,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AGL_Code_Challenge
 {
-    class Program
+    public class Program
     {
         private static IServiceProvider _serviceProvider;
         private static readonly ILog Logger = LogManager.GetLogger(typeof(Program));
 
-        static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
@@ -39,9 +39,11 @@ namespace AGL_Code_Challenge
                 RegisterServices();
 
 
-                await _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IShowGroupedPets>().ShowAsync(petType);
+                await _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IShowGroupedPets>().ShowAndFormatAsync(petType);
 
-                Console.ReadLine();
+#if !DEBUG
+                 Console.ReadLine();
+#endif
             }
             catch (Exception ex)
             {
@@ -53,7 +55,7 @@ namespace AGL_Code_Challenge
 
         //Register Services for Dependency Injections.
 
-        private static void RegisterServices()
+        public static void RegisterServices()
         {
 
             IServiceCollection services = new ServiceCollection();
@@ -76,10 +78,7 @@ namespace AGL_Code_Challenge
             services.AddTransient<IPersonServices, PersonService>();
             services.AddTransient<IShowGroupedPets, ShowGroupedPets>();
 
-
-
             _serviceProvider = services.BuildServiceProvider(true);
-
         }
     }
 }

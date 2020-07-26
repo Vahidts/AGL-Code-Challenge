@@ -5,6 +5,6 @@ namespace AGL.Application.Interfaces
     //Interface for show the grouped pets in UI.
     public interface IShowGroupedPets
     {
-        Task ShowAsync(string petType);
+        Task ShowAndFormatAsync(string petType);
     }
 }

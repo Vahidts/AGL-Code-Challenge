@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-
 using AGL.Application.Dto;
-
 using FluentValidation;
 
 namespace AGL.Application.Validators

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using AGL.Application.Dto;
 using AGL.Application.Interfaces;
 using AGL.Application.Validators;
@@ -28,6 +27,7 @@ namespace AGL.Application.Services
         public async Task<List<PersonDto>> GetPersons()
         {
             var persons = await _personRepository.GetPersons();
+            persons.ToList().ForEach(p => p.LogDate = DateTime.Now);
             return persons.ToList();
         }
 

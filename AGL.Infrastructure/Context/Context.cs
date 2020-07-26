@@ -2,14 +2,10 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using AGL.Application.Dto;
 using AGL.Application.Interfaces;
-
 using log4net;
-
 using Microsoft.Extensions.Configuration;
-
 using Newtonsoft.Json;
 
 namespace AGL.Infrastructure.Context
@@ -37,7 +33,7 @@ namespace AGL.Infrastructure.Context
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
                     Logger.Info("Web service Result backed.");
-                    return string.IsNullOrEmpty(jsonString) ? null : JsonConvert.DeserializeObject<List<PersonDto>>(jsonString)?.AsQueryable();
+                    return !string.IsNullOrEmpty(jsonString) ?  JsonConvert.DeserializeObject<List<PersonDto>>(jsonString)?.AsQueryable(): null;
                 }
             }
         }

@@ -17,15 +17,12 @@ using Moq;
 namespace Agl.UnitTests
 {
     [TestClass]
-    public class PetPersonTest
+    public class PersonServiceTests
     {
-        [TestClass]
-        public class PersonServiceTests
+        private Mock<IContext> context;
+        private IQueryable<PersonDto> GetNormalTestPersons()
         {
-            private Mock<IContext> context;
-            private IQueryable<PersonDto> GetNormalTestPersons()
-            {
-                var persons = new List<PersonDto>
+            var persons = new List<PersonDto>
             {
                 new PersonDto
                 {
@@ -90,124 +87,122 @@ namespace Agl.UnitTests
                     }
                 }
                 };
-                return persons.AsQueryable();
-            }
+            return persons.AsQueryable();
+        }
+
+        private GroupedPetResult PrepareTestData(IQueryable<PersonDto> personDtos)
+        {
+
+            context = new Mock<IContext>();
+            context.Setup(d => d.GetPersonsFromWebService()).Returns(Task.FromResult(personDtos));
+
+            var personService = new PersonService(new PersonRepository(context.Object));
 
 
-            private GroupedPetResult PrepareTestData(IQueryable<PersonDto> personDtos)
-            {
+            // Act
+            return personService.GetAsync("cat").Result;
+        }
 
-                context = new Mock<IContext>();
-                context.Setup(d => d.GetPersonsFromWebService()).Returns(Task.FromResult(personDtos));
+        [TestMethod]
+        public void TestData_NullCheck()
+        {
+            // Arrange
+            var vm = PrepareTestData(GetNormalTestPersons());
 
-                var personService = new PersonService(new PersonRepository(context.Object));
+            // Assert
+            Assert.IsNotNull(vm);
+        }
 
-
-                // Act
-                return personService.GetAsync("cat").Result; ;
-            }
-
-            [TestMethod]
-            public void TestData_NullCheck()
-            {
-                // Arrange
-                var vm = PrepareTestData(GetNormalTestPersons());
-
-                // Assert
-                Assert.IsNotNull(vm);
-            }
-
-            [TestMethod]
-            public void TestData_GroupedResult_Not_Null()
-            {
-                // Arrange
-                var vm = PrepareTestData(GetNormalTestPersons());
-                // Assert
-                Assert.IsTrue(vm.GroupedPetVms.Any());
-
-            }
-
-            [TestMethod]
-            public void LengthyName()
-            {
-
-                var data = GetNormalTestPersons().ToList();
-                data.FirstOrDefault().Name = "Alighghfghfghfghgfhfghfdhfhfdhfhfghfhdfhfgh";
-
-                var validator = new PersonListValidator();
-                var validationResult = validator.Validate(data);
-
-                // Assert
-                Assert.IsFalse(validationResult.IsValid);
-
-            }
-
-            [TestMethod]
-            public void NullName()
-            {
-
-                var data = GetNormalTestPersons().ToList();
-                data.FirstOrDefault().Name = null;
-
-                var validator = new PersonListValidator();
-                var validationResult = validator.Validate(data);
-
-                // Assert
-                Assert.IsFalse(validationResult.IsValid);
-            }
-
-            [TestMethod]
-            public void NonAlphaNumericName()
-            {
-                var data = GetNormalTestPersons().ToList();
-                data.FirstOrDefault().Name = "Ali1";
-
-                var validator = new PersonListValidator();
-                var validationResult = validator.Validate(data);
-
-                // Assert
-                Assert.IsFalse(validationResult.IsValid);
-            }
-
-            [TestMethod]
-            public void NullEmptyGender()
-            {
-                var data = GetNormalTestPersons().ToList();
-                data.FirstOrDefault().Gender = string.Empty;
-
-                var validator = new PersonListValidator();
-                var validationResult = validator.Validate(data);
-
-                // Assert
-                Assert.IsFalse(validationResult.IsValid);
-            }
-
-            [TestMethod]
-            public void LengthyPetName()
-            {
-                var data = GetNormalTestPersons().ToList();
-                data.FirstOrDefault().Pets.FirstOrDefault().Name = "Abcdefghijlmnopq123456";
-
-                var validator = new PersonListValidator();
-                var validationResult = validator.Validate(data);
-
-                // Assert
-                Assert.IsFalse(validationResult.IsValid);
-            }
-
-            [TestMethod]
-            public void LengthyPetType()
-            {
-                var data = GetNormalTestPersons().ToList();
-                data.FirstOrDefault().Pets.FirstOrDefault().Type = "ChrocodlieDinasourEagle";
-
-                var validator = new PersonListValidator();
-                var validationResult = validator.Validate(data);
-
-                // Assert
-                Assert.IsFalse(validationResult.IsValid);
-            }
+        [TestMethod]
+        public void TestData_GroupedResult_Not_Null()
+        {
+            // Arrange
+            var vm = PrepareTestData(GetNormalTestPersons());
+            // Assert
+            Assert.IsTrue(vm.GroupedPetVms.Any());
 
         }
+
+        [TestMethod]
+        public void LengthyName()
+        {
+
+            var data = GetNormalTestPersons().ToList();
+            data.FirstOrDefault().Name = "Alighghfghfghfghgfhfghfdhfhfdhfhfghfhdfhfgh";
+
+            var validator = new PersonListValidator();
+            var validationResult = validator.Validate(data);
+
+            // Assert
+            Assert.IsFalse(validationResult.IsValid);
+
+        }
+
+        [TestMethod]
+        public void NullName()
+        {
+
+            var data = GetNormalTestPersons().ToList();
+            data.FirstOrDefault().Name = null;
+
+            var validator = new PersonListValidator();
+            var validationResult = validator.Validate(data);
+
+            // Assert
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [TestMethod]
+        public void NonAlphaNumericName()
+        {
+            var data = GetNormalTestPersons().ToList();
+            data.FirstOrDefault().Name = "Ali1";
+
+            var validator = new PersonListValidator();
+            var validationResult = validator.Validate(data);
+
+            // Assert
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [TestMethod]
+        public void NullEmptyGender()
+        {
+            var data = GetNormalTestPersons().ToList();
+            data.FirstOrDefault().Gender = string.Empty;
+
+            var validator = new PersonListValidator();
+            var validationResult = validator.Validate(data);
+
+            // Assert
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [TestMethod]
+        public void LengthyPetName()
+        {
+            var data = GetNormalTestPersons().ToList();
+            data.FirstOrDefault().Pets.FirstOrDefault().Name = "Abcdefghijlmnopq123456";
+
+            var validator = new PersonListValidator();
+            var validationResult = validator.Validate(data);
+
+            // Assert
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [TestMethod]
+        public void LengthyPetType()
+        {
+            var data = GetNormalTestPersons().ToList();
+            data.FirstOrDefault().Pets.FirstOrDefault().Type = "ChrocodlieDinasourEagle";
+
+            var validator = new PersonListValidator();
+            var validationResult = validator.Validate(data);
+
+            // Assert
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
     }
 }
